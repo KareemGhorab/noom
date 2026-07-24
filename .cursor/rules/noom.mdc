@@ -1,0 +1,14 @@
+---
+description: Noom MVP conventions
+globs:
+alwaysApply: true
+---
+
+# Noom
+
+- Shopper-only demo marketplace; checkout does not charge.
+- Use `features/*` for vertical slices; validate with `lib/validations/*`.
+- All UI strings via next-intl; locales `en` and `ar`.
+- Auth.js JWT sessions; guest cart cookie `noom_guest_id`.
+- Theme: `@kareem-ghorab/theme` imports in `app/globals.css`.
+- Read `AGENTS.md` before large changes.

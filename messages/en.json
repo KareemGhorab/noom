@@ -1,0 +1,98 @@
+{
+  "Common": {
+    "brand": "Noom",
+    "tagline": "A playful marketplace for curious shoppers.",
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "backHome": "Back to home",
+    "demoCheckoutBanner": "Demo checkout — no charge",
+    "currency": "AED",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "continueShopping": "Continue shopping",
+    "viewCart": "View cart",
+    "checkout": "Checkout",
+    "search": "Search",
+    "searchPlaceholder": "Search products...",
+    "noResults": "No products found.",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "remove": "Remove",
+    "update": "Update",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "register": "Create account",
+    "account": "Account",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "english": "English",
+    "arabic": "Arabic"
+  },
+  "Home": {
+    "heroTitle": "Welcome to Noom",
+    "heroSubtitle": "Browse doodle-soft goods, fill your cart, and place a demo order in minutes.",
+    "featured": "Featured products",
+    "categories": "Shop by category",
+    "emptyFeatured": "No featured products yet."
+  },
+  "Search": {
+    "title": "Search results",
+    "forQuery": "Results for \"{query}\"",
+    "empty": "Try another search term."
+  },
+  "Product": {
+    "notFoundTitle": "Product not found",
+    "notFoundBody": "That product may have moved or sold out.",
+    "category": "Category",
+    "description": "Description"
+  },
+  "Cart": {
+    "title": "Your cart",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Add something doodle-soft before checkout.",
+    "itemCount": "{count, plural, =0 {No items} one {# item} other {# items}}"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "name": "Full name",
+    "phone": "Phone",
+    "addressLine": "Address",
+    "city": "City",
+    "placeOrder": "Place order",
+    "emptyCart": "Your cart is empty.",
+    "invalid": "Please check your details."
+  },
+  "Confirmation": {
+    "title": "Order placed",
+    "thanks": "Thanks for shopping with Noom.",
+    "orderId": "Order ID",
+    "notFound": "Order not found."
+  },
+  "Auth": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create account",
+    "magicLinkTitle": "Magic link sign in",
+    "magicLinkSentTitle": "Check your inbox",
+    "magicLinkSentBody": "If email is configured, a link was sent. In local demo mode, check the server console for the magic link URL.",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "magicLinkButton": "Send magic link",
+    "haveAccount": "Already have an account?",
+    "needAccount": "Need an account?",
+    "useMagicLink": "Use magic link instead",
+    "registered": "Account created. You can sign in now.",
+    "invalidCredentials": "Invalid email or password.",
+    "demoHint": "Demo account: demo@noom.app / demo1234"
+  },
+  "Header": {
+    "home": "Home",
+    "cart": "Cart"
+  }
+}

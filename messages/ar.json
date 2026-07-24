@@ -1,0 +1,98 @@
+{
+  "Common": {
+    "brand": "نوم",
+    "tagline": "سوق مرح للمتسوقين الفضوليين.",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما.",
+    "backHome": "العودة للرئيسية",
+    "demoCheckoutBanner": "دفع تجريبي — بدون رسوم",
+    "currency": "درهم",
+    "quantity": "الكمية",
+    "total": "الإجمالي",
+    "subtotal": "المجموع الفرعي",
+    "continueShopping": "متابعة التسوق",
+    "viewCart": "عرض السلة",
+    "checkout": "إتمام الشراء",
+    "search": "بحث",
+    "searchPlaceholder": "ابحث عن منتجات...",
+    "noResults": "لم يتم العثور على منتجات.",
+    "inStock": "متوفر",
+    "outOfStock": "غير متوفر",
+    "addToCart": "أضف إلى السلة",
+    "remove": "إزالة",
+    "update": "تحديث",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "register": "إنشاء حساب",
+    "account": "الحساب",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "Home": {
+    "heroTitle": "مرحباً بك في نوم",
+    "heroSubtitle": "تصفح منتجات مرحة، املأ سلتك، وأتمم طلباً تجريبياً خلال دقائق.",
+    "featured": "منتجات مميزة",
+    "categories": "تسوق حسب الفئة",
+    "emptyFeatured": "لا توجد منتجات مميزة بعد."
+  },
+  "Search": {
+    "title": "نتائج البحث",
+    "forQuery": "نتائج \"{query}\"",
+    "empty": "جرّب كلمة بحث أخرى."
+  },
+  "Product": {
+    "notFoundTitle": "المنتج غير موجود",
+    "notFoundBody": "ربما تم نقل المنتج أو نفدت كميته.",
+    "category": "الفئة",
+    "description": "الوصف"
+  },
+  "Cart": {
+    "title": "سلتك",
+    "emptyTitle": "سلتك فارغة",
+    "emptyBody": "أضف شيئاً لطيفاً قبل إتمام الشراء.",
+    "itemCount": "{count, plural, =0 {لا عناصر} zero {لا عناصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصر} other {# عنصر}}"
+  },
+  "Checkout": {
+    "title": "إتمام الشراء",
+    "name": "الاسم الكامل",
+    "phone": "الهاتف",
+    "addressLine": "العنوان",
+    "city": "المدينة",
+    "placeOrder": "تأكيد الطلب",
+    "emptyCart": "سلتك فارغة.",
+    "invalid": "يرجى التحقق من البيانات."
+  },
+  "Confirmation": {
+    "title": "تم تأكيد الطلب",
+    "thanks": "شكراً للتسوق مع نوم.",
+    "orderId": "رقم الطلب",
+    "notFound": "الطلب غير موجود."
+  },
+  "Auth": {
+    "loginTitle": "تسجيل الدخول",
+    "registerTitle": "إنشاء حساب",
+    "magicLinkTitle": "تسجيل الدخول برابط سحري",
+    "magicLinkSentTitle": "تحقق من بريدك",
+    "magicLinkSentBody": "إذا كان البريد مُعداً، فقد أُرسل الرابط. في الوضع التجريبي المحلي، راجع سجل الخادم للحصول على الرابط.",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم",
+    "loginButton": "تسجيل الدخول",
+    "registerButton": "إنشاء حساب",
+    "magicLinkButton": "إرسال الرابط السحري",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "needAccount": "تحتاج حساباً؟",
+    "useMagicLink": "استخدم الرابط السحري",
+    "registered": "تم إنشاء الحساب. يمكنك تسجيل الدخول الآن.",
+    "invalidCredentials": "البريد أو كلمة المرور غير صحيحة.",
+    "demoHint": "حساب تجريبي: demo@noom.app / demo1234"
+  },
+  "Header": {
+    "home": "الرئيسية",
+    "cart": "السلة"
+  }
+}

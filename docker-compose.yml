@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: noom-postgres
+    restart: unless-stopped
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: noom
+      POSTGRES_USER: noom
+      POSTGRES_PASSWORD: noom
+    volumes:
+      - noom_pg_data:/var/lib/postgresql/data
+
+volumes:
+  noom_pg_data:
