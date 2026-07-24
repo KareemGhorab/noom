@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { getOrderById } from "@/features/orders/queries";
-import {
-  getLocalizedProductTitle,
-} from "@/features/catalog/queries";
-import { formatPrice } from "@/lib/domain/order";
 import { buttonVariants } from "@/components/ui/button-variants";
+import {
+    getLocalizedProductTitle,
+} from "@/features/catalog/queries";
+import { getOrderById } from "@/features/orders/queries";
+import { Link } from "@/i18n/navigation";
+import { formatPrice } from "@/lib/domain/order";
 import { cn } from "@/lib/utils";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
 
 export default async function ConfirmationPage({
   params,

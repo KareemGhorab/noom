@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
-import { Heart } from "lucide-react";
-import { toggleWishlistAction } from "@/features/wishlist/actions";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { toggleWishlistAction } from "@/features/wishlist/actions";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState, useTransition } from "react";
 
 export function WishlistButton({
   productId,

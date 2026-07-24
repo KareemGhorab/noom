@@ -1,9 +1,9 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
-import { requireSessionUser } from "@/lib/auth/session";
-import { getUserProfile } from "@/features/account/queries";
 import { AccountNav } from "@/components/account/account-nav";
 import { ProfileForm } from "@/components/account/profile-form";
+import { getUserProfile } from "@/features/account/queries";
+import { requireSessionUser } from "@/lib/auth/session";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
 
 export default async function AccountPage({
   params,

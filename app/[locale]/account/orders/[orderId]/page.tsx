@@ -1,14 +1,14 @@
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { requireSessionUser } from "@/lib/auth/session";
-import { getOrderForUser } from "@/features/orders/queries";
-import { getLocalizedProductTitle } from "@/features/catalog/queries";
-import { formatPrice } from "@/lib/domain/order";
 import { AccountNav } from "@/components/account/account-nav";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { getLocalizedProductTitle } from "@/features/catalog/queries";
+import { getOrderForUser } from "@/features/orders/queries";
+import { Link } from "@/i18n/navigation";
+import { requireSessionUser } from "@/lib/auth/session";
+import { formatPrice } from "@/lib/domain/order";
 import { cn } from "@/lib/utils";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default async function OrderDetailPage({
   params,

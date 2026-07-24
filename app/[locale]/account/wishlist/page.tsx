@@ -1,11 +1,11 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { requireSessionUser } from "@/lib/auth/session";
-import { listWishlistForUser } from "@/features/wishlist/queries";
 import { AccountNav } from "@/components/account/account-nav";
 import { ProductCard } from "@/components/catalog/product-card";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { listWishlistForUser } from "@/features/wishlist/queries";
+import { Link } from "@/i18n/navigation";
+import { requireSessionUser } from "@/lib/auth/session";
 import { cn } from "@/lib/utils";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function WishlistPage({
   params,

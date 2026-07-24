@@ -1,15 +1,15 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import {
-  getProductsByCategorySlug,
-  searchProducts,
-} from "@/features/catalog/queries";
-import { getSessionUser } from "@/lib/auth/session";
-import { getWishlistProductIds } from "@/features/wishlist/queries";
-import { normalizeSearchQuery } from "@/lib/validations/search";
 import { ProductCard } from "@/components/catalog/product-card";
 import { buttonVariants } from "@/components/ui/button-variants";
+import {
+    getProductsByCategorySlug,
+    searchProducts,
+} from "@/features/catalog/queries";
+import { getWishlistProductIds } from "@/features/wishlist/queries";
+import { Link } from "@/i18n/navigation";
+import { getSessionUser } from "@/lib/auth/session";
 import { cn } from "@/lib/utils";
+import { normalizeSearchQuery } from "@/lib/validations/search";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function SearchPage({
   params,

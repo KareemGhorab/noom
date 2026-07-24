@@ -73,7 +73,16 @@ Arabic uses Cairo font fallback for `[lang=ar]` / `html[dir=rtl]`.
 |---------|---------|
 | `pnpm dev` | Start dev server |
 | `pnpm test` | Run Vitest |
+| `pnpm test:e2e` | Run Playwright E2E (seeds DB, starts `pnpm dev`) |
+| `pnpm test:e2e:ui` | Playwright UI mode |
 | `pnpm typecheck` | TypeScript check |
 | `pnpm lint` | ESLint |
 | `pnpm db:push` | Push Drizzle schema |
 | `pnpm db:seed` | Seed demo data |
+
+### E2E notes
+
+- Requires Postgres (`docker compose up -d`) and a local `.env` with `DATABASE_URL` + `AUTH_SECRET`
+- Specs live in `e2e/`; config in `playwright.config.ts`
+- Global setup re-seeds demo data before the run
+- Default project is Chromium only

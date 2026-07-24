@@ -49,6 +49,14 @@
 | `components/catalog/product-card.tsx` | Product grid card |
 | `components/ui/*` | doodle-ui primitives |
 
+## E2E
+
+| Path | Purpose |
+|------|---------|
+| `e2e/*.spec.ts` | Playwright Must-flow specs |
+| `e2e/helpers/auth.ts` | Demo login helper |
+| `playwright.config.ts` | Playwright + webServer config |
+
 ## Docs & rules
 
 - `AGENTS.md` — primary agent guide

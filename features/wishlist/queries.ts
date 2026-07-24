@@ -1,6 +1,6 @@
-import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { wishlistItems } from "@/lib/db/schema";
+import { and, desc, eq } from "drizzle-orm";
 
 export async function listWishlistForUser(userId: string) {
   return db.query.wishlistItems.findMany({

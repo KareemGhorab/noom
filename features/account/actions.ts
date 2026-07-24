@@ -1,11 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { getSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { getSessionUser } from "@/lib/auth/session";
 import { profileUpdateSchema } from "@/lib/validations/profile";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export type ProfileActionState = {
   ok: boolean;

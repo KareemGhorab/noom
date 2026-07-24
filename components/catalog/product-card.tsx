@@ -1,21 +1,21 @@
-import Image from "next/image";
-import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import {
-  getLocalizedProductTitle,
-  getLocalizedCategoryName,
-} from "@/features/catalog/queries";
-import { formatPrice } from "@/lib/domain/order";
 import { AddToCartButton } from "@/components/catalog/add-to-cart-button";
 import { WishlistButton } from "@/components/catalog/wishlist-button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
+import {
+    getLocalizedCategoryName,
+    getLocalizedProductTitle,
+} from "@/features/catalog/queries";
+import { Link } from "@/i18n/navigation";
+import { formatPrice } from "@/lib/domain/order";
+import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 type ProductCardProps = {
   locale: string;

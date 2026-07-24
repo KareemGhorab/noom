@@ -1,5 +1,5 @@
-import { setRequestLocale } from "next-intl/server";
 import { requireSessionUser } from "@/lib/auth/session";
+import { setRequestLocale } from "next-intl/server";
 
 export default async function AccountLayout({
   children,

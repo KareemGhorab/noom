@@ -1,16 +1,16 @@
-import { getTranslations } from "next-intl/server";
-import { Heart, ShoppingCart, UserRound } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import { auth } from "@/auth";
-import { getCartItemCount } from "@/features/cart/queries";
-import { signOutAction } from "@/features/auth/sign-out";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { SearchForm } from "@/components/layout/search-form";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { Badge } from "@/components/ui/badge";
+import { signOutAction } from "@/features/auth/sign-out";
+import { getCartItemCount } from "@/features/cart/queries";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { Heart, ShoppingCart, UserRound } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export async function SiteHeader() {
   const t = await getTranslations("Common");

@@ -1,11 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { and, eq } from "drizzle-orm";
+import { getSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { products, wishlistItems } from "@/lib/db/schema";
-import { getSessionUser } from "@/lib/auth/session";
 import { wishlistToggleSchema } from "@/lib/validations/wishlist";
+import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export type WishlistActionState = {
   ok: boolean;

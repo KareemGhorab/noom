@@ -1,16 +1,16 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
+import {
+    clearCartItems,
+    getCartWithItems,
+} from "@/features/cart/queries";
 import { db } from "@/lib/db";
 import { orderItems, orders, products } from "@/lib/db/schema";
 import { calculateOrderTotal } from "@/lib/domain/order";
 import { checkoutSchema } from "@/lib/validations/checkout";
-import {
-  clearCartItems,
-  getCartWithItems,
-} from "@/features/cart/queries";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export type CheckoutActionState = {
   ok: boolean;

@@ -1,15 +1,15 @@
-import "dotenv/config";
-import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
-  categories,
-  orderItems,
-  orders,
-  products,
-  users,
-  wishlistItems,
+    categories,
+    orderItems,
+    orders,
+    products,
+    users,
+    wishlistItems,
 } from "@/lib/db/schema";
+import bcrypt from "bcryptjs";
+import "dotenv/config";
+import { eq } from "drizzle-orm";
 
 const categorySeed = [
   { slug: "electronics", nameEn: "Electronics", nameAr: "إلكترونيات" },

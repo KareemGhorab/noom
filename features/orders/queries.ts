@@ -1,7 +1,7 @@
-import { desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { orders } from "@/lib/db/schema";
 import { canViewOrder } from "@/lib/domain/orders-access";
+import { desc, eq } from "drizzle-orm";
 
 export async function listOrdersForUser(userId: string) {
   return db.query.orders.findMany({

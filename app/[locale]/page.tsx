@@ -1,15 +1,15 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import {
-  getCategories,
-  getFeaturedProducts,
-  getLocalizedCategoryName,
-} from "@/features/catalog/queries";
-import { getSessionUser } from "@/lib/auth/session";
-import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { ProductCard } from "@/components/catalog/product-card";
-import { buttonVariants } from "@/components/ui/button-variants";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button-variants";
+import {
+    getCategories,
+    getFeaturedProducts,
+    getLocalizedCategoryName,
+} from "@/features/catalog/queries";
+import { getWishlistProductIds } from "@/features/wishlist/queries";
+import { Link } from "@/i18n/navigation";
+import { getSessionUser } from "@/lib/auth/session";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function HomePage({
   params,

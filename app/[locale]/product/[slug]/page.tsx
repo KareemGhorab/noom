@@ -1,18 +1,18 @@
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  getLocalizedCategoryName,
-  getLocalizedProductDescription,
-  getLocalizedProductTitle,
-  getProductBySlug,
-} from "@/features/catalog/queries";
-import { getSessionUser } from "@/lib/auth/session";
-import { isProductWishlisted } from "@/features/wishlist/queries";
-import { formatPrice } from "@/lib/domain/order";
 import { AddToCartButton } from "@/components/catalog/add-to-cart-button";
 import { WishlistButton } from "@/components/catalog/wishlist-button";
 import { Badge } from "@/components/ui/badge";
+import {
+    getLocalizedCategoryName,
+    getLocalizedProductDescription,
+    getLocalizedProductTitle,
+    getProductBySlug,
+} from "@/features/catalog/queries";
+import { isProductWishlisted } from "@/features/wishlist/queries";
+import { getSessionUser } from "@/lib/auth/session";
+import { formatPrice } from "@/lib/domain/order";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default async function ProductPage({
   params,
