@@ -44,6 +44,7 @@ See `docs/architecture.md`, `docs/map.md`, and ADRs in `docs/decisions/`.
 3. Guest or authenticated cart
 4. Demo checkout (no payment charge)
 5. Auth: register, credentials login, magic link (console fallback)
+6. Account profile, order history/detail, wishlist (Phase 2)
 
 ## Conventions
 

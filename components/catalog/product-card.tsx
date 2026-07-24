@@ -7,6 +7,7 @@ import {
 } from "@/features/catalog/queries";
 import { formatPrice } from "@/lib/domain/order";
 import { AddToCartButton } from "@/components/catalog/add-to-cart-button";
+import { WishlistButton } from "@/components/catalog/wishlist-button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -33,9 +34,16 @@ type ProductCardProps = {
       slug: string;
     };
   };
+  wishlisted?: boolean;
+  signedIn?: boolean;
 };
 
-export async function ProductCard({ locale, product }: ProductCardProps) {
+export async function ProductCard({
+  locale,
+  product,
+  wishlisted = false,
+  signedIn = false,
+}: ProductCardProps) {
   const t = await getTranslations("Common");
   const title = getLocalizedProductTitle(product, locale);
   const categoryName = getLocalizedCategoryName(product.category, locale);
@@ -69,8 +77,13 @@ export async function ProductCard({ locale, product }: ProductCardProps) {
           {product.stock > 0 ? t("inStock") : t("outOfStock")}
         </p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col gap-2">
         <AddToCartButton productId={product.id} disabled={product.stock <= 0} />
+        <WishlistButton
+          productId={product.id}
+          initialWishlisted={wishlisted}
+          signedIn={signedIn}
+        />
       </CardFooter>
     </Card>
   );

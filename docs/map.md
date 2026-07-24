@@ -11,6 +11,9 @@
 | `app/[locale]/checkout/page.tsx` | Checkout form |
 | `app/[locale]/checkout/confirmation/[orderId]/page.tsx` | Order confirmation |
 | `app/[locale]/auth/*` | Login, register, magic link |
+| `app/[locale]/account` | Profile |
+| `app/[locale]/account/orders` | Order history + detail |
+| `app/[locale]/account/wishlist` | Saved products |
 | `app/api/auth/[...nextauth]/route.ts` | Auth.js handlers |
 | `app/api/auth/magic-link/verify/route.ts` | Magic link completion |
 | `proxy.ts` | Locale routing |
@@ -23,6 +26,9 @@
 | Catalog | `features/catalog/queries.ts` |
 | Cart | `features/cart/actions.ts`, `queries.ts`, `merge.ts` |
 | Checkout | `features/checkout/actions.ts` |
+| Orders | `features/orders/queries.ts` |
+| Account | `features/account/actions.ts`, `queries.ts` |
+| Wishlist | `features/wishlist/actions.ts`, `queries.ts` |
 | Auth | `features/auth/actions.ts`, `sign-out.ts` |
 
 ## Shared lib

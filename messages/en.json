@@ -42,7 +42,10 @@
   "Search": {
     "title": "Search results",
     "forQuery": "Results for \"{query}\"",
-    "empty": "Try another search term."
+    "empty": "Try another search term.",
+    "emptyTitle": "No matches",
+    "emptyPromptTitle": "Start a search",
+    "emptyPrompt": "Type a product name or open a category from the home page."
   },
   "Product": {
     "notFoundTitle": "Product not found",
@@ -93,6 +96,46 @@
   },
   "Header": {
     "home": "Home",
-    "cart": "Cart"
+    "cart": "Cart",
+    "orders": "Orders",
+    "wishlist": "Wishlist"
+  },
+  "Account": {
+    "profile": "Profile",
+    "orders": "Orders",
+    "wishlist": "Wishlist",
+    "profileTitle": "Your profile",
+    "profileSubtitle": "Update how you appear on Noom.",
+    "name": "Name",
+    "email": "Email",
+    "save": "Save changes",
+    "saved": "Profile updated.",
+    "saveError": "Could not update profile. Check your name and try again."
+  },
+  "Orders": {
+    "title": "Order history",
+    "subtitle": "Demo orders placed without a real charge.",
+    "emptyTitle": "No orders yet",
+    "emptyBody": "When you place a demo order, it will show up here.",
+    "orderLabel": "Order {id}",
+    "placedOn": "Placed {date}",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "status": "{status}",
+    "statusLabel": "Status",
+    "detailTitle": "Order details",
+    "backToOrders": "Back to orders",
+    "shipTo": "Ship to",
+    "notFoundTitle": "Order not found",
+    "notFoundBody": "That order is missing or belongs to another account."
+  },
+  "Wishlist": {
+    "title": "Wishlist",
+    "subtitle": "Products you saved for later.",
+    "emptyTitle": "Wishlist is empty",
+    "emptyBody": "Tap the heart on a product to save it here.",
+    "add": "Save to wishlist",
+    "remove": "Saved",
+    "signInToSave": "Sign in to save",
+    "error": "Could not update wishlist."
   }
 }

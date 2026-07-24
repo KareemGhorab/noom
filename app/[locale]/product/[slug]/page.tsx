@@ -7,8 +7,11 @@ import {
   getLocalizedProductTitle,
   getProductBySlug,
 } from "@/features/catalog/queries";
+import { getSessionUser } from "@/lib/auth/session";
+import { isProductWishlisted } from "@/features/wishlist/queries";
 import { formatPrice } from "@/lib/domain/order";
 import { AddToCartButton } from "@/components/catalog/add-to-cart-button";
+import { WishlistButton } from "@/components/catalog/wishlist-button";
 import { Badge } from "@/components/ui/badge";
 
 export default async function ProductPage({
@@ -23,6 +26,11 @@ export default async function ProductPage({
   if (!product) {
     notFound();
   }
+
+  const sessionUser = await getSessionUser();
+  const wishlisted = sessionUser
+    ? await isProductWishlisted(sessionUser.id, product.id)
+    : false;
 
   const t = await getTranslations("Product");
   const common = await getTranslations("Common");
@@ -60,10 +68,17 @@ export default async function ProductPage({
           </h2>
           <p className="leading-7 text-muted-foreground">{description}</p>
         </div>
-        <AddToCartButton
-          productId={product.id}
-          disabled={product.stock <= 0}
-        />
+        <div className="flex max-w-sm flex-col gap-2">
+          <AddToCartButton
+            productId={product.id}
+            disabled={product.stock <= 0}
+          />
+          <WishlistButton
+            productId={product.id}
+            initialWishlisted={wishlisted}
+            signedIn={Boolean(sessionUser)}
+          />
+        </div>
       </div>
     </div>
   );

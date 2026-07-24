@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getOrderById } from "@/features/checkout/actions";
+import { getOrderById } from "@/features/orders/queries";
 import {
   getLocalizedProductTitle,
 } from "@/features/catalog/queries";

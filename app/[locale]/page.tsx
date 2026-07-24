@@ -5,6 +5,8 @@ import {
   getFeaturedProducts,
   getLocalizedCategoryName,
 } from "@/features/catalog/queries";
+import { getSessionUser } from "@/lib/auth/session";
+import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { ProductCard } from "@/components/catalog/product-card";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Badge } from "@/components/ui/badge";
@@ -19,9 +21,13 @@ export default async function HomePage({
 
   const t = await getTranslations("Home");
   const common = await getTranslations("Common");
-  const [categories, products] = await Promise.all([
+  const sessionUser = await getSessionUser();
+  const [categories, products, wishlistIds] = await Promise.all([
     getCategories(),
     getFeaturedProducts(),
+    sessionUser
+      ? getWishlistProductIds(sessionUser.id)
+      : Promise.resolve(new Set<string>()),
   ]);
 
   return (
@@ -74,7 +80,13 @@ export default async function HomePage({
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
-              <ProductCard key={product.id} locale={locale} product={product} />
+              <ProductCard
+                key={product.id}
+                locale={locale}
+                product={product}
+                signedIn={Boolean(sessionUser)}
+                wishlisted={wishlistIds.has(product.id)}
+              />
             ))}
           </div>
         )}

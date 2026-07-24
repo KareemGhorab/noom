@@ -42,7 +42,10 @@
   "Search": {
     "title": "نتائج البحث",
     "forQuery": "نتائج \"{query}\"",
-    "empty": "جرّب كلمة بحث أخرى."
+    "empty": "جرّب كلمة بحث أخرى.",
+    "emptyTitle": "لا نتائج",
+    "emptyPromptTitle": "ابدأ البحث",
+    "emptyPrompt": "اكتب اسم منتج أو افتح فئة من الصفحة الرئيسية."
   },
   "Product": {
     "notFoundTitle": "المنتج غير موجود",
@@ -93,6 +96,46 @@
   },
   "Header": {
     "home": "الرئيسية",
-    "cart": "السلة"
+    "cart": "السلة",
+    "orders": "الطلبات",
+    "wishlist": "المفضلة"
+  },
+  "Account": {
+    "profile": "الملف",
+    "orders": "الطلبات",
+    "wishlist": "المفضلة",
+    "profileTitle": "ملفك الشخصي",
+    "profileSubtitle": "حدّث كيف تظهر في نوم.",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "save": "حفظ التغييرات",
+    "saved": "تم تحديث الملف.",
+    "saveError": "تعذر تحديث الملف. تحقق من الاسم وحاول مرة أخرى."
+  },
+  "Orders": {
+    "title": "سجل الطلبات",
+    "subtitle": "طلبات تجريبية بدون رسوم حقيقية.",
+    "emptyTitle": "لا طلبات بعد",
+    "emptyBody": "عند إتمام طلب تجريبي سيظهر هنا.",
+    "orderLabel": "طلب {id}",
+    "placedOn": "تم في {date}",
+    "itemCount": "{count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصر} other {# عنصر}}",
+    "status": "{status}",
+    "statusLabel": "الحالة",
+    "detailTitle": "تفاصيل الطلب",
+    "backToOrders": "العودة للطلبات",
+    "shipTo": "الشحن إلى",
+    "notFoundTitle": "الطلب غير موجود",
+    "notFoundBody": "هذا الطلب مفقود أو يخص حساباً آخر."
+  },
+  "Wishlist": {
+    "title": "المفضلة",
+    "subtitle": "المنتجات التي حفظتها لوقت لاحق.",
+    "emptyTitle": "المفضلة فارغة",
+    "emptyBody": "اضغط القلب على منتج لحفظه هنا.",
+    "add": "أضف إلى المفضلة",
+    "remove": "محفوظ",
+    "signInToSave": "سجّل الدخول للحفظ",
+    "error": "تعذر تحديث المفضلة."
   }
 }

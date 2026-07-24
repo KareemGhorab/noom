@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/auth";
 import { getCartItemCount } from "@/features/cart/queries";
@@ -10,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
 
 export async function SiteHeader() {
   const t = await getTranslations("Common");
@@ -25,13 +25,29 @@ export async function SiteHeader() {
           <Link href="/" className="font-display text-2xl font-bold">
             {t("brand")}
           </Link>
-          <nav className="hidden md:block">
+          <nav className="hidden items-center gap-3 md:flex">
             <Link
               href="/"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
               {headerT("home")}
             </Link>
+            {session?.user ? (
+              <>
+                <Link
+                  href="/account/orders"
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {headerT("orders")}
+                </Link>
+                <Link
+                  href="/account/wishlist"
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {headerT("wishlist")}
+                </Link>
+              </>
+            ) : null}
           </nav>
         </div>
 
@@ -42,6 +58,16 @@ export async function SiteHeader() {
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />
+          {session?.user ? (
+            <Link
+              href="/account/wishlist"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              aria-label={headerT("wishlist")}
+            >
+              <Heart className="size-4" />
+              <span className="hidden sm:inline">{headerT("wishlist")}</span>
+            </Link>
+          ) : null}
           <Link
             href="/cart"
             className={cn(
@@ -58,11 +84,20 @@ export async function SiteHeader() {
             ) : null}
           </Link>
           {session?.user ? (
-            <form action={signOutAction}>
-              <Button type="submit" variant="secondary" size="sm">
-                {t("signOut")}
-              </Button>
-            </form>
+            <>
+              <Link
+                href="/account"
+                className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+              >
+                <UserRound className="size-4" />
+                <span className="hidden sm:inline">{t("account")}</span>
+              </Link>
+              <form action={signOutAction}>
+                <Button type="submit" variant="ghost" size="sm">
+                  {t("signOut")}
+                </Button>
+              </form>
+            </>
           ) : (
             <Link href="/auth/login" className={buttonVariants({ size: "sm" })}>
               {t("signIn")}

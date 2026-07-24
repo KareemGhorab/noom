@@ -8,6 +8,7 @@ import {
   orders,
   products,
   users,
+  wishlistItems,
 } from "@/lib/db/schema";
 
 const categorySeed = [
@@ -252,6 +253,17 @@ async function seed() {
         },
       ]);
     }
+  }
+
+  const wishlistSeeds = await db.query.products.findMany({ limit: 3 });
+  for (const product of wishlistSeeds) {
+    await db
+      .insert(wishlistItems)
+      .values({
+        userId: demoUser.id,
+        productId: product.id,
+      })
+      .onConflictDoNothing();
   }
 
   console.log("Seed complete.");

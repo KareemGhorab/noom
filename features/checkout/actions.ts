@@ -95,10 +95,3 @@ export async function placeOrderAction(
 
   redirect(`/${locale}/checkout/confirmation/${order.id}`);
 }
-
-export async function getOrderById(orderId: string) {
-  return db.query.orders.findFirst({
-    where: eq(orders.id, orderId),
-    with: { items: true },
-  });
-}

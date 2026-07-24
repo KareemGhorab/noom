@@ -136,11 +136,26 @@ export const orderItems = pgTable("order_item", {
   imageUrl: text("image_url").notNull(),
 });
 
+export const wishlistItems = pgTable(
+  "wishlist_item",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.productId] })],
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
   carts: many(carts),
   orders: many(orders),
+  wishlistItems: many(wishlistItems),
 }));
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
@@ -153,6 +168,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
     references: [categories.id],
   }),
   cartItems: many(cartItems),
+  wishlistItems: many(wishlistItems),
 }));
 
 export const cartsRelations = relations(carts, ({ one, many }) => ({
@@ -177,5 +193,16 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   order: one(orders, {
     fields: [orderItems.orderId],
     references: [orders.id],
+  }),
+}));
+
+export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
+  user: one(users, {
+    fields: [wishlistItems.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [wishlistItems.productId],
+    references: [products.id],
   }),
 }));
