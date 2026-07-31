@@ -1,6 +1,15 @@
+import { isProduction } from "@/lib/env";
 import { cookies } from "next/headers";
 
 export const GUEST_CART_COOKIE = "noom_guest_id";
+
+export const cartCookieOptions = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: isProduction,
+  path: "/",
+  maxAge: 60 * 60 * 24 * 30,
+} as const;
 
 export async function getGuestId(): Promise<string | undefined> {
   const cookieStore = await cookies();
@@ -15,12 +24,7 @@ export async function ensureGuestId(): Promise<string> {
   }
 
   const guestId = crypto.randomUUID();
-  cookieStore.set(GUEST_CART_COOKIE, guestId, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
+  cookieStore.set(GUEST_CART_COOKIE, guestId, cartCookieOptions);
   return guestId;
 }
 

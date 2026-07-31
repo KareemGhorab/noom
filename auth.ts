@@ -1,19 +1,21 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
-import type { Provider } from "next-auth/providers";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import bcrypt from "bcryptjs";
-import { eq, and } from "drizzle-orm";
+import { mergeGuestCartIntoUserCart } from "@/features/cart/merge";
+import { claimGuestOrders } from "@/features/orders/actions";
 import { db } from "@/lib/db";
 import {
-  accounts,
-  sessions,
-  users,
-  verificationTokens,
+    accounts,
+    sessions,
+    users,
+    verificationTokens,
 } from "@/lib/db/schema";
-import { loginSchema } from "@/lib/validations/auth";
-import { mergeGuestCartIntoUserCart } from "@/features/cart/merge";
+import { env } from "@/lib/env";
+import { loginSchema, magicLinkConsumeSchema } from "@/lib/validations/auth";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import bcrypt from "bcryptjs";
+import { and, eq } from "drizzle-orm";
+import NextAuth from "next-auth";
+import type { Provider } from "next-auth/providers";
+import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
 const providers: Provider[] = [
   Credentials({
@@ -62,34 +64,47 @@ const providers: Provider[] = [
       token: { label: "Token", type: "text" },
     },
     async authorize(credentials) {
-      const email = credentials?.email;
-      const token = credentials?.token;
-
-      if (typeof email !== "string" || typeof token !== "string") {
-        return null;
-      }
-
-      const record = await db.query.verificationTokens.findFirst({
-        where: (vt, { and, eq }) =>
-          and(eq(vt.identifier, email), eq(vt.token, token)),
+      const parsed = magicLinkConsumeSchema.safeParse({
+        email: credentials?.email,
+        token: credentials?.token,
       });
 
-      if (!record || record.expires < new Date()) {
+      if (!parsed.success) {
         return null;
       }
 
-      await db
+      const { email, token } = parsed.data;
+
+      // Claim the token in one statement. A read followed by a delete lets two
+      // concurrent requests both pass the check before either deletes.
+      const [claimed] = await db
         .delete(verificationTokens)
         .where(
           and(
             eq(verificationTokens.identifier, email),
             eq(verificationTokens.token, token),
           ),
-        );
+        )
+        .returning();
 
-      const user = await db.query.users.findFirst({
-        where: eq(users.email, email),
-      });
+      if (!claimed || claimed.expires < new Date()) {
+        return null;
+      }
+
+      // The account is created here rather than when the link is requested, so
+      // an unverified address cannot be squatted by a stranger.
+      const [user] = await db
+        .insert(users)
+        .values({
+          email,
+          name: email.split("@")[0],
+          emailVerified: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: users.email,
+          set: { emailVerified: new Date() },
+        })
+        .returning();
 
       if (!user) {
         return null;
@@ -105,11 +120,11 @@ const providers: Provider[] = [
   }),
 ];
 
-if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
   providers.push(
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
     }),
   );
 }
@@ -121,9 +136,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 24,
+  },
   pages: {
-    signIn: "/en/auth/login",
+    // Unprefixed so the locale proxy can route the shopper to their own locale
+    // instead of forcing English.
+    signIn: "/auth/login",
   },
   providers,
   callbacks: {
@@ -143,11 +164,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async signIn({ user }) {
       if (user.id) {
+        // Claim first: the cart merge clears the guest cookie that identifies
+        // the orders to claim.
+        await claimGuestOrders(user.id);
         await mergeGuestCartIntoUserCart(user.id);
       }
       return true;
     },
   },
+  // Assumes the app only ever runs behind a proxy that sets a trustworthy
+  // Host/X-Forwarded-Host. Exposing it directly to the internet would let a
+  // spoofed Host header rewrite callback URLs.
   trustHost: true,
 });
 

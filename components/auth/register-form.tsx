@@ -12,6 +12,7 @@ const initialState: AuthActionState = { ok: true };
 
 export function RegisterForm({ locale }: { locale: string }) {
   const t = useTranslations("Auth");
+  const tErrors = useTranslations("Errors");
   const boundAction = registerAction.bind(null, locale);
   const [state, formAction, pending] = useActionState(boundAction, initialState);
 
@@ -36,7 +37,9 @@ export function RegisterForm({ locale }: { locale: string }) {
           className="doodle-radius-input"
         />
       </div>
-      {!state.ok ? <p className="text-sm text-destructive">{state.message}</p> : null}
+      {!state.ok && state.code ? (
+        <p className="text-sm text-destructive">{tErrors(state.code)}</p>
+      ) : null}
       <Button type="submit" className="w-full" disabled={pending}>
         {t("registerButton")}
       </Button>

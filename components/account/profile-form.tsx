@@ -10,7 +10,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 
-const initialState: ProfileActionState = { ok: false };
+const initialState: ProfileActionState = { ok: true };
 
 export function ProfileForm({
   name,
@@ -21,6 +21,7 @@ export function ProfileForm({
 }) {
   const t = useTranslations("Account");
   const common = useTranslations("Common");
+  const tErrors = useTranslations("Errors");
   const [state, formAction, pending] = useActionState(
     updateProfileAction,
     initialState,
@@ -46,14 +47,11 @@ export function ProfileForm({
       <Button type="submit" disabled={pending}>
         {pending ? common("loading") : t("save")}
       </Button>
-      {state.message ? (
-        <p
-          className={
-            state.ok ? "text-sm text-muted-foreground" : "text-sm text-destructive"
-          }
-        >
-          {state.ok ? t("saved") : t("saveError")}
-        </p>
+      {state.saved ? (
+        <p className="text-sm text-muted-foreground">{t("saved")}</p>
+      ) : null}
+      {!state.ok && state.code ? (
+        <p className="text-sm text-destructive">{tErrors(state.code)}</p>
       ) : null}
     </form>
   );

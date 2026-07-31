@@ -1,17 +1,19 @@
 "use client";
 
-import { useActionState } from "react";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { loginAction, type AuthActionState } from "@/features/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginAction, type AuthActionState } from "@/features/auth/actions";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { useActionState } from "react";
 
 const initialState: AuthActionState = { ok: true };
 
 export function LoginForm({ locale }: { locale: string }) {
   const t = useTranslations("Auth");
+  const tErrors = useTranslations("Errors");
+  const lookup = useTranslations("OrderLookup");
   const boundAction = loginAction.bind(null, locale);
   const [state, formAction, pending] = useActionState(boundAction, initialState);
 
@@ -32,7 +34,9 @@ export function LoginForm({ locale }: { locale: string }) {
         />
       </div>
       {!state.ok ? (
-        <p className="text-sm text-destructive">{state.message ?? t("invalidCredentials")}</p>
+        <p className="text-sm text-destructive">
+          {state.code ? tErrors(state.code) : t("invalidCredentials")}
+        </p>
       ) : null}
       <Button type="submit" className="w-full" disabled={pending}>
         {t("loginButton")}
@@ -47,6 +51,16 @@ export function LoginForm({ locale }: { locale: string }) {
       <p className="text-sm">
         <Link href="/auth/magic-link" className="underline">
           {t("useMagicLink")}
+        </Link>
+      </p>
+      <p className="text-sm">
+        <Link href="/auth/forgot-password" className="underline">
+          {t("forgotPassword")}
+        </Link>
+      </p>
+      <p className="text-sm">
+        <Link href="/orders/lookup" className="underline">
+          {lookup("link")}
         </Link>
       </p>
     </form>

@@ -1,5 +1,5 @@
-import type { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
+import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
@@ -9,5 +9,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/(ar|en)/:path*"],
+  // Everything except API routes, Next internals, and files with an extension,
+  // so an unprefixed path like /cart still redirects to /en/cart.
+  matcher: "/((?!api|_next|_vercel|.*\\..*).*)",
 };
