@@ -5,10 +5,15 @@ import { getTranslations } from "next-intl/server";
 const links = [
   { href: "/account", key: "profile" as const },
   { href: "/account/orders", key: "orders" as const },
+  { href: "/account/addresses", key: "addresses" as const },
   { href: "/account/wishlist", key: "wishlist" as const },
 ];
 
-export async function AccountNav({ active }: { active: "profile" | "orders" | "wishlist" }) {
+export async function AccountNav({
+  active,
+}: {
+  active: "profile" | "orders" | "addresses" | "wishlist";
+}) {
   const t = await getTranslations("Account");
 
   return (
