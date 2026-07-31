@@ -9,7 +9,7 @@ Quick start:
 ```bash
 docker compose up -d
 pnpm install
-pnpm db:push
+pnpm db:migrate
 pnpm db:seed
 pnpm dev
 ```

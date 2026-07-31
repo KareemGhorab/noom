@@ -10,7 +10,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Next.js Turbopack under parallel Playwright load intermittently throws
+  // `transformAlgorithm is not a function` and times out route compiles; one
+  // worker keeps the suite honest locally and matches CI.
+  workers: 1,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"], ["html", { open: "never" }]],
   timeout: 60_000,
   expect: { timeout: 10_000 },

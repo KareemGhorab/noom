@@ -1,0 +1,83 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1785487869453,
+      "tag": "0000_baseline",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785488663445,
+      "tag": "0001_rate_limit",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785490598989,
+      "tag": "0002_light_sway",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785491434468,
+      "tag": "0003_variants_step1_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785491443404,
+      "tag": "0004_variants_step2_backfill_default_variants",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785491474715,
+      "tag": "0005_variants_step3_add_variant_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1785491480975,
+      "tag": "0006_variants_step4_backfill_item_variant_ids",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1785491526050,
+      "tag": "0007_variants_step5_finalize",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1785494485353,
+      "tag": "0008_multi_currency",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1785496151617,
+      "tag": "0009_faithful_doorman",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1785496853510,
+      "tag": "0010_spicy_sphinx",
+      "breakpoints": true
+    }
+  ]
+}
