@@ -1,22 +1,29 @@
 import { AccountNav } from "@/components/account/account-nav";
+import { Pagination } from "@/components/catalog/pagination";
+import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { listOrdersForUser } from "@/features/orders/queries";
 import { Link } from "@/i18n/navigation";
 import { requireSessionUser } from "@/lib/auth/session";
 import { formatPrice } from "@/lib/domain/order";
 import { cn } from "@/lib/utils";
+import { parsePageQuery } from "@/lib/validations/pagination";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function OrdersPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { locale } = await params;
+  const rawParams = await searchParams;
   setRequestLocale(locale);
 
   const user = await requireSessionUser(locale);
-  const orders = await listOrdersForUser(user.id);
+  const page = parsePageQuery(rawParams);
+  const { items: orders, pageCount } = await listOrdersForUser(user.id, page);
   const t = await getTranslations("Orders");
   const common = await getTranslations("Common");
 
@@ -62,9 +69,16 @@ export default async function OrdersPage({
                       })}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {t("itemCount", { count: order.items.length })} ·{" "}
-                      {t("status", { status: order.status })}
+                      {t("itemCount", { count: order.items.length })}
                     </p>
+                    <Badge
+                      variant={
+                        order.status === "cancelled" ? "outline" : "secondary"
+                      }
+                      className="mt-1"
+                    >
+                      {t(`status.${order.status}`)}
+                    </Badge>
                   </div>
                   <p className="text-lg font-semibold">
                     {formatPrice(order.totalCents, order.currency, locale)}
@@ -74,6 +88,20 @@ export default async function OrdersPage({
             ))}
           </ul>
         )}
+
+        {pageCount > 1 ? (
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              {t("pageOf", { page, pageCount })}
+            </p>
+            <Pagination
+              page={page}
+              pageCount={pageCount}
+              searchParams={rawParams}
+              basePath="/account/orders"
+            />
+          </div>
+        ) : null}
       </div>
     </>
   );

@@ -47,4 +47,28 @@ describe("checkoutSchema", () => {
       }),
     ).toThrow();
   });
+
+  it("normalizes an optional discount code", () => {
+    const result = checkoutSchema.parse({
+      name: "Noom Shopper",
+      phone: "+971501234567",
+      addressLine: "123 Marina Walk",
+      city: "Dubai",
+      discountCode: "  noom10 ",
+    });
+
+    expect(result.discountCode).toBe("NOOM10");
+  });
+
+  it("treats a blank discount code as absent", () => {
+    const result = checkoutSchema.parse({
+      name: "Noom Shopper",
+      phone: "+971501234567",
+      addressLine: "123 Marina Walk",
+      city: "Dubai",
+      discountCode: "   ",
+    });
+
+    expect(result.discountCode).toBeUndefined();
+  });
 });

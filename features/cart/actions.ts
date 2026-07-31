@@ -1,21 +1,27 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { cartItems, products } from "@/lib/db/schema";
-import {
-  addToCartSchema,
-  updateCartItemSchema,
-} from "@/lib/validations/cart";
 import {
   findCartItem,
   getCurrentCartId,
+  getVariantPriceCents,
 } from "@/features/cart/queries";
+import { getActiveCurrency } from "@/lib/currency/preference";
+import { db } from "@/lib/db";
+import { cartItems, productVariants } from "@/lib/db/schema";
+import { cartQuantityCap } from "@/lib/domain/cart";
+import { hasSufficientStock } from "@/lib/domain/order";
+import { actionError, type ActionErrorCode } from "@/lib/errors";
+import {
+  addToCartSchema,
+  removeCartItemSchema,
+  updateCartItemSchema,
+} from "@/lib/validations/cart";
+import { eq, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export type ActionState = {
   ok: boolean;
-  message?: string;
+  code?: ActionErrorCode;
 };
 
 export async function addToCartAction(
@@ -23,42 +29,55 @@ export async function addToCartAction(
   formData: FormData,
 ): Promise<ActionState> {
   const parsed = addToCartSchema.safeParse({
-    productId: formData.get("productId"),
+    variantId: formData.get("variantId"),
     quantity: Number(formData.get("quantity") ?? 1),
   });
 
   if (!parsed.success) {
-    return { ok: false, message: "Invalid cart item" };
+    return actionError("invalidCartItem");
   }
 
-  const product = await db.query.products.findFirst({
-    where: eq(products.id, parsed.data.productId),
+  const currency = await getActiveCurrency();
+  const priceCents = await getVariantPriceCents(
+    parsed.data.variantId,
+    currency,
+  );
+
+  if (priceCents == null) {
+    return actionError("priceUnavailable");
+  }
+
+  const variant = await db.query.productVariants.findFirst({
+    where: eq(productVariants.id, parsed.data.variantId),
   });
 
-  if (!product || product.stock < parsed.data.quantity) {
-    return { ok: false, message: "Product unavailable" };
+  if (!variant || !hasSufficientStock(variant.stock, parsed.data.quantity)) {
+    return actionError("productUnavailable");
   }
 
   const cartId = await getCurrentCartId();
-  const existing = await findCartItem(cartId, parsed.data.productId);
+  const existing = await findCartItem(cartId, parsed.data.variantId);
+  const cap = cartQuantityCap(variant.stock);
 
-  if (existing) {
-    const nextQuantity = existing.quantity + parsed.data.quantity;
-    if (nextQuantity > product.stock || nextQuantity > 99) {
-      return { ok: false, message: "Not enough stock" };
-    }
-
-    await db
-      .update(cartItems)
-      .set({ quantity: nextQuantity })
-      .where(eq(cartItems.id, existing.id));
-  } else {
-    await db.insert(cartItems).values({
-      cartId,
-      productId: parsed.data.productId,
-      quantity: parsed.data.quantity,
-    });
+  if ((existing?.quantity ?? 0) + parsed.data.quantity > cap) {
+    return actionError("notEnoughStock");
   }
+
+  // Atomic increment bounded by the cap, so concurrent adds cannot combine
+  // into a line the checkout would reject.
+  await db
+    .insert(cartItems)
+    .values({
+      cartId,
+      variantId: parsed.data.variantId,
+      quantity: parsed.data.quantity,
+    })
+    .onConflictDoUpdate({
+      target: [cartItems.cartId, cartItems.variantId],
+      set: {
+        quantity: sql`least(${cartItems.quantity} + ${parsed.data.quantity}, ${cap})`,
+      },
+    });
 
   revalidatePath("/", "layout");
   return { ok: true };
@@ -69,27 +88,37 @@ export async function updateCartItemAction(
   formData: FormData,
 ): Promise<ActionState> {
   const parsed = updateCartItemSchema.safeParse({
-    productId: formData.get("productId"),
+    variantId: formData.get("variantId"),
     quantity: Number(formData.get("quantity")),
   });
 
   if (!parsed.success) {
-    return { ok: false, message: "Invalid quantity" };
+    return actionError("invalidQuantity");
   }
 
   const cartId = await getCurrentCartId();
-  const existing = await findCartItem(cartId, parsed.data.productId);
+  const existing = await findCartItem(cartId, parsed.data.variantId);
 
   if (!existing) {
-    return { ok: false, message: "Item not found" };
+    return actionError("cartItemNotFound");
   }
 
-  const product = await db.query.products.findFirst({
-    where: eq(products.id, parsed.data.productId),
+  const currency = await getActiveCurrency();
+  const priceCents = await getVariantPriceCents(
+    parsed.data.variantId,
+    currency,
+  );
+
+  if (priceCents == null) {
+    return actionError("priceUnavailable");
+  }
+
+  const variant = await db.query.productVariants.findFirst({
+    where: eq(productVariants.id, parsed.data.variantId),
   });
 
-  if (!product || product.stock < parsed.data.quantity) {
-    return { ok: false, message: "Not enough stock" };
+  if (!variant || !hasSufficientStock(variant.stock, parsed.data.quantity)) {
+    return actionError("notEnoughStock");
   }
 
   await db
@@ -101,12 +130,20 @@ export async function updateCartItemAction(
   return { ok: true };
 }
 
-export async function removeCartItemAction(productId: string): Promise<ActionState> {
+export async function removeCartItemAction(
+  variantId: string,
+): Promise<ActionState> {
+  const parsed = removeCartItemSchema.safeParse({ variantId });
+
+  if (!parsed.success) {
+    return actionError("invalidCartItem");
+  }
+
   const cartId = await getCurrentCartId();
-  const existing = await findCartItem(cartId, productId);
+  const existing = await findCartItem(cartId, parsed.data.variantId);
 
   if (!existing) {
-    return { ok: false, message: "Item not found" };
+    return actionError("cartItemNotFound");
   }
 
   await db.delete(cartItems).where(eq(cartItems.id, existing.id));

@@ -9,11 +9,15 @@ export const cartItemQuantitySchema = z
 export type CartItemQuantity = z.infer<typeof cartItemQuantitySchema>;
 
 export const updateCartItemSchema = z.object({
-  productId: z.string().uuid(),
+  variantId: z.string().uuid(),
   quantity: cartItemQuantitySchema,
 });
 
 export const addToCartSchema = z.object({
-  productId: z.string().uuid(),
+  variantId: z.string().uuid(),
   quantity: cartItemQuantitySchema.default(1),
+});
+
+export const removeCartItemSchema = z.object({
+  variantId: z.string().uuid(),
 });

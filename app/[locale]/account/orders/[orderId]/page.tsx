@@ -1,10 +1,12 @@
 import { AccountNav } from "@/components/account/account-nav";
+import { OrderActions } from "@/components/orders/order-actions";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { getLocalizedProductTitle } from "@/features/catalog/queries";
 import { getOrderForUser } from "@/features/orders/queries";
 import { Link } from "@/i18n/navigation";
 import { requireSessionUser } from "@/lib/auth/session";
 import { formatPrice } from "@/lib/domain/order";
+import { canCancelOrder } from "@/lib/domain/orders-access";
 import { cn } from "@/lib/utils";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
@@ -26,6 +28,8 @@ export default async function OrderDetailPage({
 
   const t = await getTranslations("Orders");
   const common = await getTranslations("Common");
+  const checkout = await getTranslations("Checkout");
+  const invoice = await getTranslations("Invoice");
 
   return (
     <>
@@ -40,28 +44,63 @@ export default async function OrderDetailPage({
               {order.id}
             </p>
           </div>
-          <Link
-            href="/account/orders"
-            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-          >
-            {t("backToOrders")}
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/account/orders/${order.id}/invoice`}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              {invoice("viewInvoice")}
+            </Link>
+            <Link
+              href="/account/orders"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              {t("backToOrders")}
+            </Link>
+          </div>
         </div>
 
         <div className="doodle-radius-card space-y-2 border bg-card p-6">
           <p>
             <span className="text-muted-foreground">{t("statusLabel")}: </span>
-            {t("status", { status: order.status })}
+            {t(`status.${order.status}`)}
           </p>
+          {order.cancelledAt ? (
+            <p className="text-sm text-muted-foreground">
+              {t("cancelledOn", {
+                date: new Intl.DateTimeFormat(locale, {
+                  dateStyle: "medium",
+                }).format(order.cancelledAt),
+              })}
+            </p>
+          ) : null}
           <p>
             <span className="text-muted-foreground">{t("shipTo")}: </span>
             {order.customerName}, {order.addressLine}, {order.city}
           </p>
+          {order.discountCents != null && order.discountCents > 0 ? (
+            <p>
+              <span className="text-muted-foreground">
+                {checkout("discount")}
+                {order.discountCode ? ` (${order.discountCode})` : ""}:{" "}
+              </span>
+              −{formatPrice(order.discountCents, order.currency, locale)}
+            </p>
+          ) : null}
           <p>
             <span className="text-muted-foreground">{common("total")}: </span>
             {formatPrice(order.totalCents, order.currency, locale)}
           </p>
         </div>
+
+        <OrderActions
+          orderId={order.id}
+          cancellable={canCancelOrder({
+            status: order.status,
+            orderUserId: order.userId,
+            viewerUserId: user.id,
+          })}
+        />
 
         <ul className="space-y-3">
           {order.items.map((item) => (
@@ -82,6 +121,15 @@ export default async function OrderDetailPage({
                 <p className="font-medium">
                   {getLocalizedProductTitle(item, locale)}
                 </p>
+                {(locale === "ar"
+                  ? item.optionSummaryAr
+                  : item.optionSummaryEn) ? (
+                  <p className="text-sm text-muted-foreground">
+                    {locale === "ar"
+                      ? item.optionSummaryAr
+                      : item.optionSummaryEn}
+                  </p>
+                ) : null}
                 <p className="text-sm text-muted-foreground">
                   {common("quantity")}: {item.quantity}
                 </p>

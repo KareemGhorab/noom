@@ -1,27 +1,28 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   removeCartItemAction,
   updateCartItemAction,
   type ActionState,
 } from "@/features/cart/actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
+import { useActionState, useTransition } from "react";
 
 const initialState: ActionState = { ok: true };
 
 export function CartItemControls({
-  productId,
+  variantId,
   quantity,
   maxQuantity,
 }: {
-  productId: string;
+  variantId: string;
   quantity: number;
   maxQuantity: number;
 }) {
   const t = useTranslations("Common");
+  const tErrors = useTranslations("Errors");
   const [state, formAction, pending] = useActionState(
     updateCartItemAction,
     initialState,
@@ -31,12 +32,15 @@ export function CartItemControls({
   return (
     <div className="flex flex-wrap items-center gap-3">
       <form action={formAction} className="flex items-center gap-2">
-        <input type="hidden" name="productId" value={productId} />
-        <label className="text-sm text-muted-foreground" htmlFor={`qty-${productId}`}>
+        <input type="hidden" name="variantId" value={variantId} />
+        <label
+          className="text-sm text-muted-foreground"
+          htmlFor={`qty-${variantId}`}
+        >
           {t("quantity")}
         </label>
         <Input
-          id={`qty-${productId}`}
+          id={`qty-${variantId}`}
           name="quantity"
           type="number"
           min={1}
@@ -55,14 +59,14 @@ export function CartItemControls({
         disabled={isRemoving}
         onClick={() =>
           startRemove(async () => {
-            await removeCartItemAction(productId);
+            await removeCartItemAction(variantId);
           })
         }
       >
         {t("remove")}
       </Button>
-      {!state.ok && state.message ? (
-        <p className="w-full text-sm text-destructive">{state.message}</p>
+      {!state.ok && state.code ? (
+        <p className="w-full text-sm text-destructive">{tErrors(state.code)}</p>
       ) : null}
     </div>
   );

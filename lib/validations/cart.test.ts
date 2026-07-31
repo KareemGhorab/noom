@@ -28,16 +28,16 @@ describe("cartItemQuantitySchema", () => {
 describe("addToCartSchema", () => {
   it("defaults quantity to 1", () => {
     const result = addToCartSchema.parse({
-      productId: "550e8400-e29b-41d4-a716-446655440000",
+      variantId: "550e8400-e29b-41d4-a716-446655440000",
     });
     expect(result.quantity).toBe(1);
   });
 });
 
 describe("updateCartItemSchema", () => {
-  it("requires a valid product id and quantity", () => {
+  it("requires a valid variant id and quantity", () => {
     const result = updateCartItemSchema.parse({
-      productId: "550e8400-e29b-41d4-a716-446655440000",
+      variantId: "550e8400-e29b-41d4-a716-446655440000",
       quantity: 3,
     });
     expect(result.quantity).toBe(3);
