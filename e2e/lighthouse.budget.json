@@ -1,0 +1,12 @@
+{
+  "budgets": [
+    {
+      "path": "/*",
+      "scores": {
+        "performance": 0.5,
+        "accessibility": 0.9
+      }
+    }
+  ],
+  "urls": ["/en"]
+}
