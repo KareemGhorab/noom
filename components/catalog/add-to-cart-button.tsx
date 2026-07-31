@@ -1,25 +1,26 @@
 "use client";
 
-import { useActionState } from "react";
-import { useTranslations } from "next-intl";
-import { addToCartAction, type ActionState } from "@/features/cart/actions";
 import { Button } from "@/components/ui/button";
+import { addToCartAction, type ActionState } from "@/features/cart/actions";
+import { useTranslations } from "next-intl";
+import { useActionState } from "react";
 
 const initialState: ActionState = { ok: true };
 
 export function AddToCartButton({
-  productId,
+  variantId,
   disabled,
 }: {
-  productId: string;
+  variantId: string;
   disabled?: boolean;
 }) {
   const t = useTranslations("Common");
+  const tErrors = useTranslations("Errors");
   const [state, formAction, pending] = useActionState(addToCartAction, initialState);
 
   return (
     <form action={formAction} className="w-full">
-      <input type="hidden" name="productId" value={productId} />
+      <input type="hidden" name="variantId" value={variantId} />
       <input type="hidden" name="quantity" value="1" />
       <Button
         type="submit"
@@ -28,8 +29,8 @@ export function AddToCartButton({
       >
         {pending ? t("loading") : t("addToCart")}
       </Button>
-      {!state.ok && state.message ? (
-        <p className="mt-2 text-sm text-destructive">{state.message}</p>
+      {!state.ok && state.code ? (
+        <p className="mt-2 text-sm text-destructive">{tErrors(state.code)}</p>
       ) : null}
     </form>
   );

@@ -5,11 +5,25 @@ import {
     getCategories,
     getFeaturedProducts,
     getLocalizedCategoryName,
+    getProductsBySlugs,
 } from "@/features/catalog/queries";
-import { getWishlistProductIds } from "@/features/wishlist/queries";
+import { getRatingSummaries } from "@/features/reviews/queries";
 import { Link } from "@/i18n/navigation";
-import { getSessionUser } from "@/lib/auth/session";
+import { getRecentlyViewedSlugs } from "@/lib/catalog/recently-viewed";
+import { getActiveCurrency } from "@/lib/currency/preference";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return { title: t("homeTitle"), description: t("homeDescription") };
+}
 
 export default async function HomePage({
   params,
@@ -21,14 +35,19 @@ export default async function HomePage({
 
   const t = await getTranslations("Home");
   const common = await getTranslations("Common");
-  const sessionUser = await getSessionUser();
-  const [categories, products, wishlistIds] = await Promise.all([
+  const currency = await getActiveCurrency();
+  const recentSlugs = await getRecentlyViewedSlugs();
+  const [categories, products, recentlyViewed] = await Promise.all([
     getCategories(),
-    getFeaturedProducts(),
-    sessionUser
-      ? getWishlistProductIds(sessionUser.id)
-      : Promise.resolve(new Set<string>()),
+    getFeaturedProducts(currency),
+    getProductsBySlugs(recentSlugs, currency),
   ]);
+
+  const ratingIds = [
+    ...products.map((product) => product.id),
+    ...recentlyViewed.map((product) => product.id),
+  ];
+  const ratings = await getRatingSummaries(ratingIds);
 
   return (
     <div className="space-y-12">
@@ -70,6 +89,25 @@ export default async function HomePage({
         </div>
       </section>
 
+      {recentlyViewed.length > 0 ? (
+        <section className="space-y-4">
+          <h2 className="font-display text-2xl font-bold">
+            {t("recentlyViewed")}
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {recentlyViewed.map((product) => (
+              <ProductCard
+                key={product.id}
+                locale={locale}
+                currency={currency}
+                product={product}
+                rating={ratings.get(product.id)}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <h2 className="font-display text-2xl font-bold">{t("featured")}</h2>
@@ -83,9 +121,9 @@ export default async function HomePage({
               <ProductCard
                 key={product.id}
                 locale={locale}
+                currency={currency}
                 product={product}
-                signedIn={Boolean(sessionUser)}
-                wishlisted={wishlistIds.has(product.id)}
+                rating={ratings.get(product.id)}
               />
             ))}
           </div>

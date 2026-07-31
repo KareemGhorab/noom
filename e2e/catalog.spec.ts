@@ -17,7 +17,11 @@ test.describe("Catalog", () => {
     await expect(
       page.getByRole("heading", { name: "Wireless Earbuds" }),
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Add to cart" })).toBeVisible();
+    await expect(
+      page
+        .getByRole("region", { name: "Wireless Earbuds" })
+        .getByRole("button", { name: "Add to cart" }),
+    ).toBeVisible();
   });
 
   test("shows empty search state for unknown queries", async ({ page }) => {

@@ -19,9 +19,20 @@ export function WishlistButton({
   signedIn: boolean;
 }) {
   const t = useTranslations("Wishlist");
+  const tErrors = useTranslations("Errors");
   const [wishlisted, setWishlisted] = useState(initialWishlisted);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  // Client navigation reuses the component instance, so the server's view of
+  // the wishlist has to win over stale local state.
+  const serverState = `${productId}:${initialWishlisted}`;
+  const [lastServerState, setLastServerState] = useState(serverState);
+  if (lastServerState !== serverState) {
+    setLastServerState(serverState);
+    setWishlisted(initialWishlisted);
+    setError(null);
+  }
 
   if (!signedIn) {
     return (
@@ -47,7 +58,7 @@ export function WishlistButton({
           startTransition(async () => {
             const result = await toggleWishlistAction(productId);
             if (!result.ok) {
-              setError(result.message ?? t("error"));
+              setError(result.code ? tErrors(result.code) : t("error"));
               return;
             }
             setWishlisted(Boolean(result.wishlisted));
