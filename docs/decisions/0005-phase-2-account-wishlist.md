@@ -1,7 +1,7 @@
 # 0005 — Phase 2 account, orders, wishlist
 
 - Date: 2026-07-24
-- Status: accepted
+- Status: partly superseded by [0009](0009-reviews-and-ratings.md)
 
 ## Context
 
@@ -12,7 +12,8 @@ Phase 1 shipped browse → cart → demo checkout → auth. Shoppers still neede
 - Auth-gated `/account` area: profile, order history + detail, wishlist
 - Wishlist is a simple `wishlist_item` composite key (`user_id`, `product_id`)
 - Order detail is ownership-checked via `canViewOrder`
-- Sellers, payments, and reviews remain deferred
+- Sellers, payments, and reviews remain deferred (reviews shipped later; see
+  [0009](0009-reviews-and-ratings.md))
 
 ## Consequences
 
