@@ -1,25 +1,31 @@
-import { auth } from "@/auth";
+import { HeaderCartBadge } from "@/components/layout/header-cart-badge";
+import { HeaderCurrencySwitcher } from "@/components/layout/header-currency-switcher";
+import { HeaderNavSessionLinks } from "@/components/layout/header-nav-session-links";
+import { HeaderSessionMenu } from "@/components/layout/header-session-menu";
+import {
+    HeaderCartBadgeSkeleton,
+    HeaderSessionMenuSkeleton,
+} from "@/components/layout/header-skeletons";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { SearchForm } from "@/components/layout/search-form";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button-variants";
-import { signOutAction } from "@/features/auth/sign-out";
-import { getCartItemCount } from "@/features/cart/queries";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 
+/**
+ * The shell here (brand, static nav, search, theme/language toggles) has no
+ * session or cart dependency, so it can render immediately. The currency
+ * switcher, session menu, and cart badge are split into Suspense-wrapped
+ * children so a slow preference / `auth()` / guest-cart-cookie read never
+ * blocks the rest of the header, or the page, from streaming.
+ */
 export async function SiteHeader() {
   const t = await getTranslations("Common");
   const headerT = await getTranslations("Header");
-  const session = await auth();
-  const cartCount = await getCartItemCount();
 
   return (
-    <header className="border-b bg-background/95 backdrop-blur">
+    <header className="border-b bg-background/95 backdrop-blur print:hidden">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="font-display text-2xl font-bold">
@@ -32,22 +38,15 @@ export async function SiteHeader() {
             >
               {headerT("home")}
             </Link>
-            {session?.user ? (
-              <>
-                <Link
-                  href="/account/orders"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {headerT("orders")}
-                </Link>
-                <Link
-                  href="/account/wishlist"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {headerT("wishlist")}
-                </Link>
-              </>
-            ) : null}
+            <Link
+              href="/orders/lookup"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              {headerT("findOrder")}
+            </Link>
+            <Suspense fallback={null}>
+              <HeaderNavSessionLinks />
+            </Suspense>
           </nav>
         </div>
 
@@ -57,52 +56,16 @@ export async function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
+          <Suspense fallback={null}>
+            <HeaderCurrencySwitcher />
+          </Suspense>
           <ThemeToggle />
-          {session?.user ? (
-            <Link
-              href="/account/wishlist"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-              aria-label={headerT("wishlist")}
-            >
-              <Heart className="size-4" />
-              <span className="hidden sm:inline">{headerT("wishlist")}</span>
-            </Link>
-          ) : null}
-          <Link
-            href="/cart"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "relative",
-            )}
-          >
-            <ShoppingCart className="size-4" />
-            <span className="hidden sm:inline">{headerT("cart")}</span>
-            {cartCount > 0 ? (
-              <Badge className="absolute -top-2 -end-2 size-5 justify-center rounded-full p-0 text-[10px]">
-                {cartCount}
-              </Badge>
-            ) : null}
-          </Link>
-          {session?.user ? (
-            <>
-              <Link
-                href="/account"
-                className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
-              >
-                <UserRound className="size-4" />
-                <span className="hidden sm:inline">{t("account")}</span>
-              </Link>
-              <form action={signOutAction}>
-                <Button type="submit" variant="ghost" size="sm">
-                  {t("signOut")}
-                </Button>
-              </form>
-            </>
-          ) : (
-            <Link href="/auth/login" className={buttonVariants({ size: "sm" })}>
-              {t("signIn")}
-            </Link>
-          )}
+          <Suspense fallback={<HeaderCartBadgeSkeleton />}>
+            <HeaderCartBadge />
+          </Suspense>
+          <Suspense fallback={<HeaderSessionMenuSkeleton />}>
+            <HeaderSessionMenu />
+          </Suspense>
         </div>
       </div>
     </header>

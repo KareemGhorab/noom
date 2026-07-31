@@ -9,3 +9,10 @@ html[dir="rtl"] {
   --font-doodle-body: "Cairo", "Neucha", system-ui, sans-serif;
   --font-doodle-display: "Cairo", "Cabin Sketch", system-ui, sans-serif;
 }
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+}
