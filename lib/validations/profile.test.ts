@@ -19,4 +19,21 @@ describe("profileUpdateSchema", () => {
   it("rejects empty names", () => {
     expect(profileUpdateSchema.safeParse({ name: "   " }).success).toBe(false);
   });
+
+  it("accepts a name at the 100 character limit", () => {
+    const name = "a".repeat(100);
+    expect(profileUpdateSchema.parse({ name }).name).toBe(name);
+  });
+
+  it("rejects a name past the 100 character limit", () => {
+    expect(
+      profileUpdateSchema.safeParse({ name: "a".repeat(101) }).success,
+    ).toBe(false);
+  });
+
+  it("measures length after trimming", () => {
+    expect(
+      profileUpdateSchema.safeParse({ name: `  ${"a".repeat(100)}  ` }).success,
+    ).toBe(true);
+  });
 });
